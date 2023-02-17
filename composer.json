@@ -1,0 +1,15 @@
+{
+  "name": "vendor_name/mainhost",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Utya92",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "phpoffice/phpword": "dev-master"
+  }
+}
