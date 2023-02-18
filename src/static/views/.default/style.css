@@ -11,3 +11,10 @@
     border:0;
 }
 
+.doc-field{
+    color: blue;
+}
+
+.not-valid{
+    color: red;
+}

@@ -2,12 +2,11 @@
 
 namespace Handlers;
 
+if (!defined('JOIN_CORE') || !JOIN_CORE) die();
+
 class FileHandler {
-    protected array $validTypes = array(
-        "MS_WORD_DOCX" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "MS_WORD_DOC" => "application/msword"
-    );
-    protected string $uploadPath = "src/upload";
+    protected array $validTypes = ALLOWED_UPLOADS;
+    protected string $uploadPath = UPLOADED_FILES_PATH;
     protected bool $isPresentFiles = false;
     public bool $isValidTypes = true;
     public array $message = array();
@@ -17,7 +16,7 @@ class FileHandler {
     function checkPresentFiles(array $arr): void {
         if (isset($arr['file']) && $_SERVER["REQUEST_METHOD"] === "POST") {
             $this->isPresentFiles = isset($arr);
-        } else $this->message[] = "Файл не выбран";
+        }
     }
 
     function checkValidFileType(array $arr): void {
@@ -37,13 +36,21 @@ class FileHandler {
         if ($this->isPresentFiles && $this->isValidTypes) {
             for ($i = 0; $i < count($arr['file']['type']); $i++) {
                 $this->uploadFilesTo[$i] = $this->uploadPath . "/" . ($arr['file']['name'][$i]);
-                move_uploaded_file($arr['file']['tmp_name'][$i], $this->uploadFilesTo[$i]);
-                $this->message[] = "files was uploaded!";
+                if (move_uploaded_file($arr['file']['tmp_name'][$i], $this->uploadFilesTo[$i])) {
+                    $this->message[] = "file: " . $arr['file']["name"][$i] . " was uploaded!";
+                } else {
+                    $this->message[] = "ERROR!!! file: " . $arr['file']["name"][$i] . " wasn't uploaded!";
+                }
             }
-        } else $this->message[] = "upload is failed";
+        }
     }
 
-    function showView() {
+    function showView(array $arr = []) {
+        $arResult = [
+            "IS_VALID" => $this->isValidTypes,
+            "FILES_LOGS" => $this->message,
+            "DOCUMENT_LENGTH" => $arr
+        ];
         require 'src/static/views/.default/load_form.php';
     }
 }

@@ -1,19 +1,19 @@
 <?php
-
 namespace WorkWithFiles;
 
+if (!defined('JOIN_CORE') || !JOIN_CORE) die();
+
 class UploadedFileSearcher {
-    protected array $allFilesPath = array();
-    protected array $source = array();
+    protected array $uploadedFilesPath = array();
 
     function loadAllFilesPath(): array {
-        $handle = opendir("src/upload");
+        $handle = opendir(UPLOADED_FILES_PATH);
         if ($handle) {
             while (($entry = readdir($handle)) !== false) {
-                $this->allFilesPath[] = "src/upload/" . $entry;
+                $this->uploadedFilesPath[] = UPLOADED_FILES_PATH . '/' . $entry;
             }
         }
         closedir($handle);
-        return $this->allFilesPath;
+        return $this->uploadedFilesPath;
     }
 }
